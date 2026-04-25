@@ -1,0 +1,76 @@
+<div class="table-container">
+  <header class="site-header">
+    <div class="logo-area">
+      <span class="cyber-line"></span>
+      <h1>ELEMENT<span class="highlight">X</span></h1>
+      <span class="sub-text">v1.0 // ATOMIC_DASHBOARD</span>
+    </div>
+    <div class="system-status">
+      <span class="pulse-dot"></span>
+      <span class="status-text">SYSTEM_READY</span>
+    </div>
+  </header>
+
+  <div class="periodic-grid">
+    @for (element of elements; track element.number) {
+    <div class="element-card" [style.grid-column]="element.xpos" [style.grid-row]="element.ypos"
+      [style.--element-color]="'#' + element['cpk-hex']" [class.selected]="selectedElement === element"
+      (click)="openModal(element)">
+      <span class="atomic-number">{{ element.number }}</span>
+      <span class="symbol">{{ element.symbol }}</span>
+    </div>
+    }
+  </div>
+</div>
+
+@if (selectedElement) {
+<div class="modal-overlay" (click)="selectedElement = null">
+  <div class="modal-content" (click)="$event.stopPropagation()"
+    [style.--element-color]="'#' + selectedElement['cpk-hex']">
+
+    <button class="close-btn" (click)="selectedElement = null">×</button>
+
+    <div class="modal-body">
+      <div class="info-sidebar">
+        <div class="element-box" [style.border-color]="'#' + selectedElement['cpk-hex']">
+          <span class="m-number">{{ selectedElement.number }}</span>
+          <span class="m-symbol">{{ selectedElement.symbol }}</span>
+          <span class="m-name">{{ selectedElement.name }}</span>
+          <span class="m-mass">{{ selectedElement.atomic_mass }}</span>
+        </div>
+
+        <div class="quick-stats">
+          <p><strong>Category:</strong> {{ selectedElement.category }}</p>
+          <p><strong>Phase:</strong> {{ selectedElement.phase }}</p>
+          <p><strong>Discovered:</strong> {{ selectedElement.discovered_by || 'Unknown' }}</p>
+        </div>
+      </div>
+
+      <div class="content-main">
+        <h2 class="structure-title">Atomic Structure</h2>
+
+        <div class="visual-container">
+          @if (selectedElement.bohr_model_3d) {
+          <model-viewer [src]="selectedElement.bohr_model_3d" alt="A 3D model of an atom" auto-rotate camera-controls
+            touch-action="pan-y" shadow-intensity="1" style="width: 100%; height: 350px;">
+          </model-viewer>
+          } @else if (selectedElement.bohr_model_image) {
+          <img [src]="selectedElement.bohr_model_image" class="bohr-image">
+          }
+        </div>
+
+        <div class="description">
+          <h3>Summary</h3>
+          <p>{{ selectedElement.summary }}</p>
+
+          <div class="extra-info">
+            <span class="badge">Shells: {{ selectedElement.shells.join(', ') }}</span>
+            <span class="badge">Config: {{ selectedElement.electron_configuration_semantic }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+}

@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { PeriodicTableComponent } from './components/periodic-table/periodic-table.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [PeriodicTableComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
